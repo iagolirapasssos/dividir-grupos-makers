@@ -1,4 +1,4 @@
-import { JSON_BIN_URL, MASTER_KEY } from './config.js';
+import { JSON_BIN_URL, MASTER_KEY } from '../config.js';
 
 // Array com todas as perguntas e suas opções
 const questions = [

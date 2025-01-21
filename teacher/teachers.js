@@ -1,4 +1,4 @@
-import { JSON_BIN_URL, MASTER_KEY } from './config.js';
+import { JSON_BIN_URL, MASTER_KEY } from '../config.js';
 
 const teacherCode = localStorage.getItem('teacherCode');
 document.getElementById('teacherCode').textContent = teacherCode || "Código não encontrado.";
