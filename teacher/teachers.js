@@ -1,5 +1,5 @@
-const JSON_BIN_URL = process.env.JSON_BIN_URL;
-const MASTER_KEY = process.env.MASTER_KEY;
+//const JSON_BIN_URL = process.env.JSON_BIN_URL;
+//const MASTER_KEY = process.env.MASTER_KEY;
 
 const teacherCode = localStorage.getItem('teacherCode');
 document.getElementById('teacherCode').textContent = teacherCode || "Código não encontrado.";
