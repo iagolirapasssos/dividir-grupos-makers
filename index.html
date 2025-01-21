@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Grupos</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Bem-vindo ao Portal de Grupos</h1>
+        <p class="intro-text">
+            Este portal utiliza as competências da BCCI (Base de Competências Criativas e Inovadoras) para agrupar os alunos de forma <strong>heterogênea</strong>. Ideal para professores de <strong>laboratórios Maker</strong>, <strong>Pensamento Computacional</strong> e <strong>Robótica</strong>, o sistema promove o equilíbrio entre as habilidades e características de cada aluno.
+        </p>
+        <div class="competency-container">
+            <div class="competency-card">
+                <h2>Curiosidade Artístico-Científica</h2>
+                <p>Explorar formas criativas de pesquisa e registro, combinando ciência e arte para solucionar problemas.</p>
+            </div>
+            <div class="competency-card">
+                <h2>Intenção Criativa</h2>
+                <p>Encorajar os alunos a encontrar técnicas inovadoras para resolver problemas complexos.</p>
+            </div>
+            <div class="competency-card">
+                <h2>Construção Colaborativa</h2>
+                <p>Promover o trabalho em grupo, acolhendo ideias diversas para alcançar um objetivo comum.</p>
+            </div>
+            <div class="competency-card">
+                <h2>Pensamento Complexo</h2>
+                <p>Desenvolver a habilidade de combinar elementos diversos para criar soluções contextuais inovadoras.</p>
+            </div>
+        </div>
+        <div class="process-section">
+            <h2>Como funciona o processo?</h2>
+            <p>
+                O sistema avalia as respostas dos alunos em diferentes áreas (criatividade, colaboração, curiosidade e complexidade). 
+                Com base nos dados, cada aluno é atribuído a um grupo que equilibra as competências, promovendo a heterogeneidade 
+                e o aprendizado mútuo.
+            </p>
+        </div>
+        <div class="button-container">
+            <button onclick="openTeacherModal()">Área do Professor</button>
+            <button onclick="redirectTo('student')">Área do Aluno</button>
+        </div>
+    </div>
+
+    <!-- Modal para código do professor -->
+    <!-- Modal para código do professor -->
+    <div id="teacherModal" class="modal hidden">
+        <div class="modal-content">
+            <button id="closeModal" onclick="closeModal()" class="close-button">❌</button>
+            <h2>Entrar ou Criar Sala</h2>
+            <label for="teacherCodeInput">Código da Sala:</label>
+            <input type="text" id="teacherCodeInput" placeholder="Digite o código da sala">
+            <div class="modal-buttons">
+                <button onclick="enterTeacherRoom()">Entrar</button>
+                <button onclick="createTeacherRoom()">Criar Nova Sala</button>
+            </div>
+        </div>
+    </div>
+    <script src="main.js"></script>
+
+</body>
+</html>

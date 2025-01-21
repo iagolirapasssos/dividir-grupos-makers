@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Área do Professor</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Importação do Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Mapa de Grupos</h1>
+        <h2>Seu código de professor: <span id="teacherCode"></span></h2>
+        <div id="groupMap"></div>
+    </div>
+
+    <!-- Modal para migração -->
+    <div id="modal" class="hidden">
+        <div class="modal-content">
+            <h3>Migrar Usuário</h3>
+            <select id="groupSelect">
+                <!-- Opções serão adicionadas dinamicamente -->
+            </select>
+            <button id="submitMigration">Enviar</button>
+            <button id="cancelMigration">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- Barra de progresso -->
+    <div id="progress" class="hidden">
+        <div class="progress-bar"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="teachers.js"></script>
+</body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laboratório Maker - Perfil do Aluno</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Laboratório Maker</h1>
+        <form id="studentForm">
+            <label for="studentName">Seu Nome:</label>
+            <input type="text" id="studentName" placeholder="Digite seu nome completo" required>
+            
+            <label for="teacherCode">Código da Turma:</label>
+            <input type="text" id="teacherCode" placeholder="Digite o código da turma" required>
+            
+            <h2>Conte um pouco sobre você:</h2>
+            
+            <!-- Curiosidade Artístico-Científica -->
+            <label>1. Quando você vê algo interessante (objeto, experiência ou arte), você:</label>
+            <select id="question1" required>
+                <option value="1">Prefiro não mexer para não estragar</option>
+                <option value="2">Observo com atenção como funciona</option>
+                <option value="3">Pesquiso mais sobre o assunto</option>
+                <option value="4">Faço testes e experimentos para entender melhor</option>
+            </select>
+
+            <label>2. Em uma feira de ciências, o que você mais gosta de fazer?</label>
+            <select id="question2" required>
+                <option value="1">Prefiro só assistir as apresentações</option>
+                <option value="2">Gosto de fazer anotações sobre o que vejo</option>
+                <option value="3">Faço perguntas sobre os projetos</option>
+                <option value="4">Adoro criar e apresentar experimentos</option>
+            </select>
+
+            <!-- Intenção Criativa -->
+            <label>3. Quando precisa resolver um problema novo, você:</label>
+            <select id="question3" required>
+                <option value="1">Espero alguém me mostrar como fazer</option>
+                <option value="2">Tento copiar soluções que já vi antes</option>
+                <option value="3">Procuro diferentes maneiras de resolver</option>
+                <option value="4">Crio minha própria forma de resolver</option>
+            </select>
+
+            <label>4. Se algo não dá certo na primeira tentativa, você:</label>
+            <select id="question4" required>
+                <option value="1">Desisto e faço outra coisa</option>
+                <option value="2">Peço ajuda para alguém</option>
+                <option value="3">Tento de novo de um jeito diferente</option>
+                <option value="4">Faço vários testes até conseguir</option>
+            </select>
+
+            <!-- Construção Colaborativa -->
+            <label>5. Durante um trabalho em grupo, você geralmente:</label>
+            <select id="question5" required>
+                <option value="1">Prefiro fazer sua parte sozinho</option>
+                <option value="2">Aceita as ideias dos outros</option>
+                <option value="3">Contribui com suas próprias ideias</option>
+                <option value="4">Ajuda a juntar as ideias de todos</option>
+            </select>
+
+            <label>6. Quando um colega tem uma ideia diferente da sua:</label>
+            <select id="question6" required>
+                <option value="1">Prefiro manter minha ideia original</option>
+                <option value="2">Escuto, mas sigo com minha ideia</option>
+                <option value="3">Tento misturar as duas ideias</option>
+                <option value="4">Conversamos para criar algo melhor juntos</option>
+            </select>
+
+            <!-- Pensamento Complexo -->
+            <label>7. Ao criar algo novo, você:</label>
+            <select id="question7" required>
+                <option value="1">Prefiro usar apenas um tipo de material</option>
+                <option value="2">Misturo alguns materiais diferentes</option>
+                <option value="3">Gosto de combinar várias coisas</option>
+                <option value="4">Adoro misturar materiais e técnicas diferentes</option>
+            </select>
+
+            <label>8. Quando está construindo um projeto:</label>
+            <select id="question8" required>
+                <option value="1">Sigo apenas um caminho do início ao fim</option>
+                <option value="2">Faço pequenas mudanças no plano original</option>
+                <option value="3">Experimento diferentes possibilidades</option>
+                <option value="4">Combino várias ideias de formas diferentes</option>
+            </select>
+
+            <button type="submit">Enviar</button>
+        </form>
+        <div id="progress" class="hidden">
+            <div class="progress-bar"></div>
+        </div>
+        <div id="result" class="hidden"></div>
+    </div>
+    <script src="students.js"></script>
+</body>
+</html>
