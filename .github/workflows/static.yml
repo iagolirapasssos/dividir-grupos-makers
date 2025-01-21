@@ -36,9 +36,8 @@ jobs:
       # 2. Replace placeholders with secrets
       - name: Replace Variables in config.js
         run: |
-          sed -i 's|PLACEHOLDER_JSON_BIN_URL|${{ secrets.JSON_BIN_URL }}|g' config.template.js
-          sed -i 's|PLACEHOLDER_MASTER_KEY|${{ secrets.MASTER_KEY }}|g' config.template.js
-          mv config.template.js config.js
+          sed -i 's|PLACEHOLDER_JSON_BIN_URL|${{ secrets.JSON_BIN_URL }}|g' config.js
+          sed -i 's|PLACEHOLDER_MASTER_KEY|${{ secrets.MASTER_KEY }}|g' config.js
 
       # 3. Setup Pages
       - name: Setup Pages
@@ -55,3 +54,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
