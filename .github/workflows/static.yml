@@ -39,20 +39,22 @@ jobs:
           sed -i 's|PLACEHOLDER_JSON_BIN_URL|${{ secrets.JSON_BIN_URL }}|g' config.js
           sed -i 's|PLACEHOLDER_MASTER_KEY|${{ secrets.MASTER_KEY }}|g' config.js
 
+      # 3. Clear GitHub Pages cache
+      - name: Clear GitHub Pages cache
+        run: rm -rf .pages-cache
 
-      # 3. Setup Pages
+      # 4. Setup Pages
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      # 4. Upload artifact
+      # 5. Upload artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           # Upload entire repository
           path: '.'
 
-      # 5. Deploy to GitHub Pages
+      # 6. Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-
