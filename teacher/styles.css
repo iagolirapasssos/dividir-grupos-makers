@@ -1,3 +1,4 @@
+/*styles.css de teachers*/
 /* Reset e estilos base */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -404,6 +405,7 @@ button.migrate-btn i {
 .skill-item:nth-child(2) i { color: #f1c40f; } /* Criativo */
 .skill-item:nth-child(3) i { color: #e67e22; } /* Colaborativo */
 .skill-item:nth-child(4) i { color: #9b59b6; } /* Complexo */
+.skill-item:nth-child(5) i { color: #1abc9c; } /* Letramento Tecnológico */
 
 /* Ajuste para telas menores */
 @media (max-width: 400px) {

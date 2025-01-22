@@ -1,4 +1,21 @@
-import { JSON_BIN_URL, MASTER_KEY } from '../config.js';
+//students.js
+
+// Função para aguardar o CONFIG
+async function waitForConfig() {
+    return new Promise((resolve) => {
+        const checkConfig = () => {
+            if (window.CONFIG) {
+                resolve(window.CONFIG);
+            } else {
+                setTimeout(checkConfig, 100);
+            }
+        };
+        checkConfig();
+    });
+}
+
+let JSON_BIN_URL = "";
+let MASTER_KEY = "";
 
 // Array com todas as perguntas e suas opções
 const questions = [
@@ -151,6 +168,40 @@ const questions = [
             { value: 3, text: 'Analiso diferentes perspectivas' },
             { value: 4, text: 'Crio mapas mentais com todas as possibilidades' }
         ]
+    },
+    // Letramento Tecnológico
+    {
+        id: 'question14',
+        category: 'technological_literacy',
+        text: 'Ao aprender a usar uma nova tecnologia ou software, você:',
+        options: [
+            { value: 1, text: 'Prefiro que alguém me mostre apenas o básico' },
+            { value: 2, text: 'Sigo tutoriais passo a passo' },
+            { value: 3, text: 'Exploro diferentes funcionalidades por conta própria' },
+            { value: 4, text: 'Busco entender como a tecnologia funciona por dentro' }
+        ]
+    },
+    {
+        id: 'question15',
+        category: 'technological_literacy',
+        text: 'Quando encontra um erro ou problema em um sistema:',
+        options: [
+            { value: 1, text: 'Peço ajuda imediatamente' },
+            { value: 2, text: 'Tento algumas soluções básicas' },
+            { value: 3, text: 'Pesquiso diferentes formas de resolver' },
+            { value: 4, text: 'Analiso o erro e desenvolvo soluções próprias' }
+        ]
+    },
+    {
+        id: 'question16',
+        category: 'technological_literacy',
+        text: 'Em relação ao processo de aprendizado de máquina:',
+        options: [
+            { value: 1, text: 'Prefiro usar sistemas já prontos' },
+            { value: 2, text: 'Entendo o básico do funcionamento' },
+            { value: 3, text: 'Consigo adaptar sistemas existentes' },
+            { value: 4, text: 'Crio e modifico sistemas conforme necessário' }
+        ]
     }
 ];
 
@@ -163,6 +214,22 @@ function shuffleArray(array) {
     return array;
 }
 
+// Funções de criptografia
+function encryptData(text, key) {
+    return CryptoJS.AES.encrypt(text, key).toString();
+}
+
+function decryptData(encryptedText, key) {
+    try {
+        const bytes = CryptoJS.AES.decrypt(encryptedText, key);
+        return bytes.toString(CryptoJS.enc.Utf8);
+    } catch (error) {
+        console.error('Erro ao descriptografar:', error);
+        return 'Protegido';
+    }
+}
+
+// Função para renderizar as perguntas
 // Função para renderizar as perguntas
 function renderQuestions() {
     const form = document.getElementById('studentForm');
@@ -179,16 +246,17 @@ function renderQuestions() {
     // Embaralha as perguntas
     const shuffledQuestions = shuffleArray([...questions]);
     
-    // Pega apenas 8 perguntas (2 de cada categoria)
+    // Pega apenas 10 perguntas (2 de cada categoria)
     const selectedQuestions = {
         artistic_scientific_curiosity: [],
         creative_intention: [],
         collaborative_construction: [],
-        complex_thinking: []
+        complex_thinking: [],
+        technological_literacy: [] // Adicionada nova categoria
     };
     
     shuffledQuestions.forEach(question => {
-        if (selectedQuestions[question.category].length < 2) {
+        if (selectedQuestions[question.category] && selectedQuestions[question.category].length < 2) {
             selectedQuestions[question.category].push(question);
         }
     });
@@ -197,13 +265,20 @@ function renderQuestions() {
     const finalQuestions = shuffleArray(Object.values(selectedQuestions).flat());
     
     // Insere as perguntas antes do botão submit
-    finalQuestions.forEach(question => {
+    finalQuestions.forEach((question, index) => {
         const label = document.createElement('label');
-        label.textContent = question.text;
+        // Adiciona número da questão dinamicamente
+        label.textContent = `${index + 1}. ${question.text}`;
         
         const select = document.createElement('select');
         select.id = question.id;
         select.required = true;
+
+        // Adiciona opção vazia inicial
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = "Selecione uma opção";
+        select.appendChild(defaultOption);
         
         question.options.forEach(option => {
             const optionElement = document.createElement('option');
@@ -216,105 +291,6 @@ function renderQuestions() {
         submitButton.parentNode.insertBefore(select, submitButton);
     });
 }
-
-// Chama a função quando a página carregar
-document.addEventListener('DOMContentLoaded', renderQuestions);
-
-document.getElementById('studentForm').addEventListener('submit', function (event) {
-    event.preventDefault();
-
-    // Coleta os dados do formulário
-    const studentName = document.getElementById('studentName').value.trim();
-    const teacherCode = document.getElementById('teacherCode').value.trim();
-
-    // Coleta as respostas das perguntas
-    const answers = {
-        artistic_scientific_curiosity: (
-            parseInt(document.getElementById('question1').value) +
-            parseInt(document.getElementById('question2').value)
-        ) / 2,
-        creative_intention: (
-            parseInt(document.getElementById('question3').value) +
-            parseInt(document.getElementById('question4').value)
-        ) / 2,
-        collaborative_construction: (
-            parseInt(document.getElementById('question5').value) +
-            parseInt(document.getElementById('question6').value)
-        ) / 2,
-        complex_thinking: (
-            parseInt(document.getElementById('question7').value) +
-            parseInt(document.getElementById('question8').value)
-        ) / 2,
-    };
-
-    if (!studentName || !teacherCode) {
-        alert("Por favor, preencha todos os campos.");
-        return;
-    }
-
-    // Calcula o perfil do aluno
-    const profile = calculateStudentProfile(answers);
-
-    // Mostrar barra de progresso
-    const progress = document.getElementById('progress');
-    const progressBar = document.querySelector('.progress-bar');
-    progress.classList.remove('hidden');
-    progressBar.style.width = '50%';
-
-    // Obter os dados existentes e distribuir em grupos
-    axios.get(`${JSON_BIN_URL}/latest`, {
-        headers: { "X-Master-Key": MASTER_KEY },
-    })
-        .then((response) => {
-            let data = response.data.record;
-
-            // Garante que a estrutura de grupos e perfis do professor exista
-            if (!data[teacherCode]) {
-                data[teacherCode] = {
-                    groups: {
-                        group1: [],
-                        group2: [],
-                        group3: [],
-                        group4: [],
-                        group5: [],
-                        group6: []
-                    },
-                };
-            }
-
-            // Distribui o aluno em um grupo
-            const assignedGroup = assignStudentToGroup(data[teacherCode]);
-
-            // Adiciona o aluno ao grupo designado
-            data[teacherCode].groups[assignedGroup].push({
-                name: studentName,
-                profile: profile,
-            });
-
-            // Envia os dados atualizados
-            axios.put(JSON_BIN_URL, data, {
-                headers: {
-                    "Content-Type": "application/json",
-                    "X-Master-Key": MASTER_KEY,
-                },
-            })
-                .then(() => {
-                    progressBar.style.width = '100%';
-                    document.getElementById('studentForm').classList.add('hidden');
-                    document.getElementById('result').classList.remove('hidden');
-                    document.getElementById('result').innerHTML = "Obrigado! Suas respostas foram registradas.";
-                })
-                .catch((error) => {
-                    console.error("Erro ao atualizar os dados:", error);
-                    alert("Erro ao salvar os dados. Por favor, tente novamente.");
-                });
-        })
-        .catch((error) => {
-            console.error("Erro ao carregar os dados existentes:", error);
-            alert("Erro ao carregar os dados. Por favor, tente novamente.");
-        });
-});
-
 // Calcula o perfil do aluno com base nas respostas
 function calculateStudentProfile(answers) {
     return {
@@ -322,29 +298,261 @@ function calculateStudentProfile(answers) {
         creative_intention_score: answers.creative_intention,
         collaborative_score: answers.collaborative_construction,
         complex_thinking_score: answers.complex_thinking,
+        technological_literacy_score: answers.technological_literacy, // Nova pontuação
         raw_answers: answers,
     };
 }
 
 // Função para distribuir alunos nos grupos de forma heterogênea
-function assignStudentToGroup(teacherData) {
+function assignStudentToGroup(teacherData, studentProfile) {
     const groups = teacherData.groups;
     const maxStudentsPerGroup = 6;
 
-    // Primeiro, encontra o grupo com menos alunos
-    let leastCrowdedGroup = 'group1';
-    let minStudents = groups['group1'] ? groups['group1'].length : 0;
+    // Inicializa estrutura para armazenar as médias de habilidades por grupo
+    const groupAverages = Object.keys(groups).reduce((acc, groupName) => {
+        const students = groups[groupName];
+        const totalStudents = students.length;
 
-    for (let i = 1; i <= 6; i++) {
-        const groupName = `group${i}`;
-        if (!groups[groupName]) {
-            groups[groupName] = [];
+        const averageSkills = totalStudents
+            ? calculateGroupSkills(students)
+            : { artistic: 0, creative: 0, collaborative: 0, complex: 0, tech: 0 };
+
+        acc[groupName] = { totalStudents, averageSkills };
+        return acc;
+    }, {});
+
+    // Ordena os grupos: primeiro os com menos de 6 alunos, depois os demais
+    const sortedGroups = Object.keys(groupAverages).sort((a, b) => {
+        const groupA = groupAverages[a];
+        const groupB = groupAverages[b];
+
+        // Prioriza grupos com menos de 6 alunos
+        if (groupA.totalStudents < maxStudentsPerGroup && groupB.totalStudents >= maxStudentsPerGroup) {
+            return -1;
+        } else if (groupA.totalStudents >= maxStudentsPerGroup && groupB.totalStudents < maxStudentsPerGroup) {
+            return 1;
         }
-        if (groups[groupName].length < minStudents) {
-            minStudents = groups[groupName].length;
-            leastCrowdedGroup = groupName;
+
+        // Caso ambos estejam na mesma faixa (< ou >= 6), prioriza menor quantidade total
+        return groupA.totalStudents - groupB.totalStudents;
+    });
+
+    // Encontra o grupo mais adequado com base na heterogeneidade das habilidades
+    let bestGroup = sortedGroups[0];
+    let bestDiversityScore = Infinity;
+
+    sortedGroups.forEach((groupName) => {
+        const groupData = groupAverages[groupName];
+        const groupSize = groupData.totalStudents;
+
+        // Calcula a diferença média entre as habilidades do grupo e o novo aluno
+        const diversityScore = calculateDiversityScore(groupData.averageSkills, studentProfile);
+
+        // Atualiza o melhor grupo se a pontuação for menor
+        if (diversityScore < bestDiversityScore || (diversityScore === bestDiversityScore && groupSize < maxStudentsPerGroup)) {
+            bestDiversityScore = diversityScore;
+            bestGroup = groupName;
         }
+    });
+
+    return bestGroup;
+}
+
+// Função para calcular a diversidade de um grupo com base nas habilidades
+function calculateDiversityScore(students) {
+    if (!Array.isArray(students) || students.length === 0) {
+        return 0; // Retorna 0 se o grupo estiver vazio ou não for um array
     }
 
-    return leastCrowdedGroup;
+    // Define os totais iniciais para as habilidades
+    const totals = {
+        artistic: 0,
+        creative: 0,
+        collaborative: 0,
+        complex: 0,
+        tech: 0
+    };
+
+    // Soma as habilidades de cada estudante
+    students.forEach(student => {
+        if (student.profile) { // Verifica se o perfil do aluno existe
+            totals.artistic += student.profile.artistic_scientific_score || 0;
+            totals.creative += student.profile.creative_intention_score || 0;
+            totals.collaborative += student.profile.collaborative_score || 0;
+            totals.complex += student.profile.complex_thinking_score || 0;
+            totals.tech += student.profile.technological_literacy_score || 0;
+        }
+    });
+
+    // Calcula a diversidade como a média das diferenças entre habilidades
+    const average = {
+        artistic: totals.artistic / students.length,
+        creative: totals.creative / students.length,
+        collaborative: totals.collaborative / students.length,
+        complex: totals.complex / students.length,
+        tech: totals.tech / students.length
+    };
+
+    // Retorna um escore de diversidade baseado na variação das habilidades
+    return Object.values(average).reduce((sum, value) => sum + value, 0).toFixed(2);
 }
+
+
+// Função para calcular a média das habilidades de um grupo
+function calculateGroupSkills(students) {
+    if (!Array.isArray(students) || students.length === 0) {
+        return {
+            artistic: 0,
+            creative: 0,
+            collaborative: 0,
+            complex: 0,
+            tech: 0
+        };
+    }
+
+    // Soma todas as habilidades de cada aluno no grupo
+    const totalSkills = students.reduce((totals, student) => {
+        return {
+            artistic: totals.artistic + (student.profile?.artistic_scientific_score || 0),
+            creative: totals.creative + (student.profile?.creative_intention_score || 0),
+            collaborative: totals.collaborative + (student.profile?.collaborative_score || 0),
+            complex: totals.complex + (student.profile?.complex_thinking_score || 0),
+            tech: totals.tech + (student.profile?.technological_literacy_score || 0)
+        };
+    }, {
+        artistic: 0,
+        creative: 0,
+        collaborative: 0,
+        complex: 0,
+        tech: 0
+    });
+
+    // Calcula a média de cada habilidade
+    return {
+        artistic: (totalSkills.artistic / students.length).toFixed(1),
+        creative: (totalSkills.creative / students.length).toFixed(1),
+        collaborative: (totalSkills.collaborative / students.length).toFixed(1),
+        complex: (totalSkills.complex / students.length).toFixed(1),
+        tech: (totalSkills.tech / students.length).toFixed(1)
+    };
+}
+
+// Inicialização assíncrona
+async function initializeApp() {
+    try {
+        const config = await waitForConfig();
+        JSON_BIN_URL = config.JSON_BIN_URL;
+        MASTER_KEY = config.MASTER_KEY;
+
+        // Renderiza as perguntas
+        renderQuestions();
+
+        // Configura o formulário
+        document.getElementById('studentForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const studentName = document.getElementById('studentName').value.trim();
+            const teacherCode = document.getElementById('teacherCode').value.trim();
+
+            if (!studentName || !teacherCode) {
+                alert("Por favor, preencha todos os campos.");
+                return;
+            }
+
+            // Coleta todas as perguntas selecionadas
+            const selectedQuestions = document.querySelectorAll('select[id^="question"]');
+            
+            // Agrupa as respostas por categoria
+            const answersByCategory = {
+                artistic_scientific_curiosity: [],
+                creative_intention: [],
+                collaborative_construction: [],
+                complex_thinking: [],
+                technological_literacy: [] // Nova categoria
+            };
+
+            // Percorre todas as perguntas selecionadas e agrupa suas respostas
+            selectedQuestions.forEach(select => {
+                const questionId = select.id;
+                const question = questions.find(q => q.id === questionId);
+                if (question) {
+                    answersByCategory[question.category].push(parseInt(select.value));
+                }
+            });
+
+            // Calcula a média para cada categoria
+            const answers = {
+                artistic_scientific_curiosity: answersByCategory.artistic_scientific_curiosity.reduce((a, b) => a + b, 0) / 2,
+                creative_intention: answersByCategory.creative_intention.reduce((a, b) => a + b, 0) / 2,
+                collaborative_construction: answersByCategory.collaborative_construction.reduce((a, b) => a + b, 0) / 2,
+                complex_thinking: answersByCategory.complex_thinking.reduce((a, b) => a + b, 0) / 2,
+                technological_literacy: answersByCategory.technological_literacy.reduce((a, b) => a + b, 0) / 2
+            };
+
+            const profile = calculateStudentProfile(answers);
+
+            // Mostrar barra de progresso
+            const progress = document.getElementById('progress');
+            const progressBar = document.querySelector('.progress-bar');
+            progress.classList.remove('hidden');
+            progressBar.style.width = '50%';
+
+            try {
+                // Obter os dados existentes e distribuir em grupos
+                const response = await axios.get(`${JSON_BIN_URL}/latest`, {
+                    headers: { "X-Master-Key": MASTER_KEY },
+                });
+                
+                let data = response.data.record;
+
+                // Garante que a estrutura de grupos e perfis do professor exista
+                // E use o código criptografado nas operações
+                if (!data[teacherCode]) {
+                    data[teacherCode] = {
+                        groups: {
+                            group1: [],
+                            group2: [],
+                            group3: [],
+                            group4: [],
+                            group5: [],
+                            group6: []
+                        },
+                    };
+                }
+
+                // Distribui o aluno em um grupo
+                const assignedGroup = assignStudentToGroup(data[teacherCode]);
+
+                // Adiciona o aluno ao grupo designado
+                data[teacherCode].groups[assignedGroup].push({
+                    name: encryptData(studentName, MASTER_KEY),
+                    profile: profile,
+                });
+
+                // Envia os dados atualizados
+                await axios.put(JSON_BIN_URL, data, {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-Master-Key": MASTER_KEY,
+                    },
+                });
+
+                progressBar.style.width = '100%';
+                document.getElementById('studentForm').classList.add('hidden');
+                document.getElementById('result').classList.remove('hidden');
+                document.getElementById('result').innerHTML = "Obrigado! Suas respostas foram registradas.";
+            } catch (error) {
+                console.error("Erro ao processar formulário:", error);
+                alert("Erro ao salvar os dados. Por favor, tente novamente.");
+                progress.classList.add('hidden');
+                progressBar.style.width = '0';
+            }
+        });
+
+    } catch (error) {
+        console.error('Erro ao inicializar:', error);
+    }
+}
+
+// Inicia quando o DOM estiver pronto
+document.addEventListener('DOMContentLoaded', initializeApp);
